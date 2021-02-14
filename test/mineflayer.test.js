@@ -47,27 +47,6 @@ squid.supportedVersions.forEach((supportedVersion, i) => {
       expect(msg1.extra[0].text).toEqual(message)
     }
 
-    async function waitMessages (bot, messages) {
-      const toReceive = messages.reduce((acc, message) => {
-        acc[message] = 1
-        return acc
-      }, {})
-      const received = {}
-      return new Promise(resolve => {
-        const listener = msg => {
-          const message = msg.extra[0].text
-          if (!toReceive[message]) throw new Error('Received ' + message + ' , expected to receive one of ' + messages)
-          if (received[message]) throw new Error('Received ' + message + ' two times')
-          received[message] = 1
-          if (Object.keys(received).length === messages.length) {
-            bot.removeListener('message', listener)
-            resolve()
-          }
-        }
-        bot.on('message', listener)
-      })
-    }
-
     beforeEach(async () => {
       const options = settings
       options['online-mode'] = false
